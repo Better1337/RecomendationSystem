@@ -1,11 +1,9 @@
 import re
 from googleapiclient.discovery import build
 
-# Konfiguracja klienta API YouTube
 def get_youtube_client():
     return build('youtube', 'v3', developerKey='TWÓJ_KLUCZ_API')
 
-# Lista "stop words"
 stop_words = set([
     "i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you", "your", "yours",
     "yourself", "yourselves", "he", "him", "his", "himself", "she", "her", "hers",
@@ -21,14 +19,12 @@ stop_words = set([
     "than", "too", "very", "s", "t", "can", "will", "just", "don", "should", "now"
 ])
 
-# Funkcja do ekstrakcji i czyszczenia słów kluczowych z tytułu
 def extract_keywords(title):
     title = re.sub(r'[^\w\s]', '', title).lower()
     words = title.split()
     keywords = [word for word in words if word not in stop_words]
     return " ".join(set(keywords))
 
-# Funkcja do wyszukiwania filmów na podstawie słów kluczowych
 def search_videos_by_keywords(keywords):
     youtube = get_youtube_client()
     response = youtube.search().list(
@@ -46,7 +42,6 @@ def search_videos_by_keywords(keywords):
         videos.append({'title': title, 'url': video_url})
     return videos
 
-# Funkcja do ekstrakcji ID filmu z URL
 def extract_video_id(url):
     regex = r'(?:v=|\/)([0-9A-Za-z_-]{11}).*'
     matches = re.search(regex, url)
@@ -54,7 +49,6 @@ def extract_video_id(url):
         return matches.group(1)
     return None
 
-# Main
 if __name__ == "__main__":
     youtube_url = "TUTAJ_WPISZ_LINK_DO_FILMIKU"  # Wprowadź link do filmu YouTube
     video_id = extract_video_id(youtube_url)
